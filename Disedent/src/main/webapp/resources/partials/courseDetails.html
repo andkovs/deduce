@@ -1,0 +1,138 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<form novalidate name="courseForm">
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Название курса</label>
+            <input required ng-maxlength="150" class="form-control" type="text" name="courseTitle" ng-model="course.title"/>
+            <span ng-show="courseForm.courseTitle.$error.maxlength" class="text-warning">Не более 150 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Описание курса</label>
+            <textarea rows="3" required ng-maxlength="2000" class="form-control" type="text" name="courseDescription"
+                      ng-model="course.description"/>
+            <span ng-show="courseForm.courseDescription.$error.maxlength"
+                  class="text-warning">Не более 2000 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <button ng-show="course.id==0&&!courseForm.$invalid||course.id!=0&&!courseForm.$invalid&&courseForm.$dirty" type="button"
+                    ng-click="saveCourse(course, courseForm)" class="btn btn-success">Сохранить <span class="glyphicon glyphicon-ok"></span></button>
+            <button ng-show="courseForm.$dirty" type="button"
+                    ng-click="resetCourse(courseForm)" class="btn btn-danger">Сбросить <span class="glyphicon glyphicon-remove"></span></button>
+            <a ui-sref="courses" class="btn btn-default">Назад</a>
+        </div>
+    </div>
+</form>
+<hr/>
+
+<form novalidate name="testForm" ng-show="course.id!=0">
+    <ins><h4>Список Тестов</h4></ins>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>Наименование теста</th>
+            <th style="width: 3%"></th>
+        </tr>
+        <tr ng-repeat="t in courseTests track by $index">
+            <td>
+                <p>{{t.title}}</p>
+            </td>
+            <td style="text-align:right">
+                <a href="" ng-click="removeTest(t, testForm)" class="text-danger glyphicon glyphicon-trash"></a>
+            </td>
+        </tr>
+        <tr ng-if="!chapters">
+            <td colspan="3">Здесь еще нет тестов</td>
+        </tr>
+    </table>
+</form>
+
+<form name="newTestForm" ng-show="course.id!=0" novalidate>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <label>Добавить новый тест</label>
+            <ui-select name="testSelect" ng-model="test.selected" theme="selectize">
+                <ui-select-match required placeholder="Выберите тест">{{$select.selected.title}}</ui-select-match>
+                <ui-select-choices repeat="item in filteredTests | filter: $select.search">
+                    <div ng-bind-html="item.title | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="form-group col-xs-4">
+            <label style="display:block;">&nbsp;</label>
+            <button class="btn btn-success" type="button" ng-click="addTest(test.selected)" ng-disabled="test.selected == undefined"><i class="glyphicon glyphicon-plus"></i></button>
+        </div>
+    </div>
+</form>
+<hr/>
+<form novalidate name="chapterForm" ng-show="course.id!=0">
+    <ins><h4>Список Глав</h4></ins>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th style="width: 10%">Номер</th>
+            <th>Наименование</th>
+            <th style="width: 3%"></th>
+            <th style="width: 3%"></th>
+            <th style="width: 3%"></th>
+        </tr>
+        <tr ng-repeat="ch in chapters">
+            <td>
+                <p>{{$index+1}}</p>
+            </td>
+            <td>
+                <p>{{ch.title}}</p>
+            </td>
+            <td>
+                <a href="" ng-click="preview(ch.id)" class="text-info glyphicon glyphicon-eye-open"></a>
+            </td>
+            <td>
+                <a ui-sref="chapterDetails({id: {{ch.id}}})" class="glyphicon glyphicon-edit"></a>
+            </td>
+            <td style="text-align:right">
+                <a href="" ng-click="removeChapter(ch, chapterForm)" class="text-danger glyphicon glyphicon-trash"></a>
+            </td>
+        </tr>
+        <tr ng-if="chapters.length==0">
+            <td colspan="3">Здесь еще нет глав</td>
+        </tr>
+    </table>
+</form>
+
+<form name="newChapterForm" ng-show="course.id!=0" novalidate>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <label>Добавить новую главу</label>
+            <input ng-maxlength="200" class="form-control" type="text" name="newChapterTitle" ng-model="newChapter.title" required/>
+            <span ng-show="newChapterForm.newChapterTitle.$error.maxlength" class="text-warning">Не более 200 символов</span>
+        </div>
+        <div class="form-group col-xs-4">
+            <label style="display:block;">&nbsp;</label>
+            <button class="btn btn-success" type="button" ng-click="addChapter(newChapter)" ng-disabled="newChapterForm.$invalid"><i class="glyphicon glyphicon-plus"></i></button>
+        </div>
+    </div>
+</form>
+
+<div id="chapterPreview" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">{{previewData.title}}</h2>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <h2 class="modal-title">Разделы</h2>
+                <ul ng-repeat="t in previewData.topics">
+                    <li>{{t.title}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

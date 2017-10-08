@@ -1,0 +1,98 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<form novalidate name="chapterForm">
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Название главы</label>
+            <input required ng-maxlength="200" class="form-control" type="text" name="chapterTitle" ng-model="chapter.title"/>
+            <span ng-show="chapterForm.chapterTitle.$error.maxlength" class="text-warning">Не более 200 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Описание главы</label>
+            <textarea rows="3" required ng-maxlength="2000" class="form-control" type="text" name="chapterDescription" ng-model="chapter.description"/>
+            <span ng-show="chapterForm.chapterDescription.$error.maxlength" class="text-warning">Не более 2000 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <button ng-show="!chapterForm.$invalid&&chapterForm.$dirty" type="button"
+                    ng-click="saveChapter(chapter, chapterForm)" class="btn btn-success">Сохранить <span class="glyphicon glyphicon-ok"></span></button>
+            <button ng-show="chapterForm.$dirty" type="button"
+                    ng-click="resetChapter(chapterForm)" class="btn btn-danger">Сбросить <span class="glyphicon glyphicon-remove"></span></button>
+            <a ui-sref="courseDetails({ id: {{chapter.courseId}}})" class="btn btn-default">Назад</a>
+        </div>
+    </div>
+</form>
+<hr/>
+
+<form novalidate name="topicForm">
+    <ins><h4>Список Разделов</h4></ins>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th style="width: 10%">Номер</th>
+            <th>Наименование</th>
+            <th style="width: 3%"></th>
+            <th style="width: 3%"></th>
+            <th style="width: 3%"></th>
+        </tr>
+        <tr ng-repeat="t in topics">
+            <td>
+                <p>{{$index+1}}</p>
+            </td>
+            <td>
+                <p>{{t.title}}</p>
+            </td>
+            <td>
+                <a href="" ng-click="preview(t.id)" class="text-info glyphicon glyphicon-eye-open"></a>
+            </td>
+            <td>
+                <a ui-sref="topicDetails({id: {{t.id}}})" class="glyphicon glyphicon-edit"></a>
+            </td>
+            <td style="text-align:right">
+                <a href="" ng-click="removeTopic(t, topicForm)" class="text-danger glyphicon glyphicon-trash"></a>
+            </td>
+        </tr>
+        <tr ng-if="topics.length==0">
+            <td colspan="3">Здесь еще нет разделов</td>
+        </tr>
+    </table>
+</form>
+<form name="newTopicForm" novalidate>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <label>Добавить новый раздел</label>
+            <input ng-maxlength="200" class="form-control" type="text" name="newTopicTitle" ng-model="newTopic.title" required/>
+            <span ng-show="newTopicForm.newTopicTitle.$error.maxlength" class="text-warning">Не более 200 символов</span>
+        </div>
+        <div class="form-group col-xs-4">
+            <label style="display:block;">&nbsp;</label>
+            <button class="btn btn-success" type="button" ng-click="addTopic(newTopic)" ng-disabled="newTopicForm.$invalid"><i class="glyphicon glyphicon-plus"></i></button>
+        </div>
+    </div>
+</form>
+
+<div id="topicPreview" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">{{previewData.title}}</h2>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <p class="lead">{{previewData.description}}</p>
+                <!--<div class="wrapper">-->
+                <!--<ng-pdf template-url="./resources/partials/viewer.html" canvasid="pdf" scale="page-fit" page=1></ng-pdf>-->
+                <!--</div>-->
+                <embed ng-src="{{content}}" style="width:100%;height:1000px;"></embed>
+                <!--<pdfjs-viewer data="pdfUrl"></pdfjs-viewer>-->
+            </div>
+        </div>
+    </div>
+</div>

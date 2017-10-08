@@ -1,0 +1,137 @@
+<h3>{{title}} ({{groups.length}})</h3>
+<hr/>
+
+<form name="newGroupForm" novalidate>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <label>Добавить новую группу</label>
+            <input ng-maxlength="100" class="form-control" type="text" name="newGroupTitle"
+                   ng-model="newGroup.title" required/>
+            <span ng-show="newGroupForm.newGroupTitle.$error.maxlength"
+                  class="text-warning">Не более 100 символов</span>
+        </div>
+        <div class="form-group col-xs-4">
+            <label style="display:block;">&nbsp;</label>
+            <button class="btn btn-success" type="button" ng-click="addGroup(newGroup)"
+                    ng-disabled="newGroupForm.$invalid">
+                <i class="glyphicon glyphicon-plus"></i>
+            </button>
+        </div>
+        <!-- Group Title Search -->
+        <div class="form-group col-xs-4 col-sm-4 col-md-2 pull-right">
+            <lable><b>Поиск</b></lable>
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="search">
+                <span class="input-group-addon glyphicon glyphicon-search"></span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-hover">
+    <tr>
+        <!--<th>-->
+        <!--<a href="" ng-click="sortType = 'index'; sortReverse = !sortReverse">Номер группы-->
+        <!--<span ng-show="sortType == 'index'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>-->
+        <!--<span ng-show="sortType == 'index'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>-->
+        <!--</a>-->
+        <!--</th>-->
+        <th>
+            <a href="" ng-click="sortType = 'title'; sortReverse = !sortReverse">Группа
+                <span ng-show="sortType == 'title'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom"
+                      style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'title'&& sortReverse" class="glyphicon glyphicon-triangle-top"
+                      style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'count'; sortReverse = !sortReverse">Заказов
+                <span ng-show="sortType == 'count'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom"
+                      style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'count'&& sortReverse" class="glyphicon glyphicon-triangle-top"
+                      style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'creationDate'; sortReverse = !sortReverse">Оформлена
+                <span ng-show="sortType == 'creationDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom"
+                      style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'creationDate'&& sortReverse" class="glyphicon glyphicon-triangle-top"
+                      style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th style="width: 3%"></th>
+        <th style="width: 3%"></th>
+        <th style="width: 3%"></th>
+
+    </tr>
+    <tr ng-repeat="g in groups | orderBy:sortType:sortReverse | filter: search">
+        <!--<td>{{$index+1}}</td>-->
+        <td ng-bind="g.title"></td>
+        <td ng-bind="g.count"></td>
+        <td ng-bind="g.creationDate"></td>
+        <td>
+            <a href="" ng-click="getResults(g)" class="text-info glyphicon glyphicon-eye-open"></a>
+        </td>
+        <td>
+            <a ui-sref="groupDetails({id: {{g.id}}})" class="glyphicon glyphicon-edit"></a>
+        </td>
+        <td><a href="" ng-click="removeGroup(g)" class="text-danger glyphicon glyphicon-remove"></a></td>
+    </tr>
+    <tr ng-if="groups.length==0">
+        <td colspan="3">Здесь еще нет групп</td>
+    </tr>
+</table>
+
+<div id="groupResults" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">Группа: {{previewData.title}}</h2>
+                <hr/>
+                <h3 class="modal-title">Офрмлена: {{previewData.creationDate}}</h3>
+            </div>
+
+            <!-- Body -->
+
+            <div class="modal-body">
+                <div class="row">
+                <div class="form-group col-xs-4">
+                    <lable><b>Поиск</b></lable>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="previewSearch">
+                        <span class="input-group-addon glyphicon glyphicon-search"></span>
+                    </div>
+                </div>
+                    </div>
+
+                <table class="table table-hover">
+                    <tr ng-repeat="r in results | filter: previewSearch">
+                        <td>{{r.lastName}} {{r.firstName}} {{r.middleName}}</td>
+                        <td>{{r.testTitle}}</td>
+                        <td>{{r.finishTime}}</td>
+                        <td>{{r.amountCorrectAnswers}}/{{r.amountQuestions}}</td>
+                        <td><a href="" ng-click="removeResult(r)" class="text-danger glyphicon glyphicon-remove"></a>
+                        </td>
+                    </tr>
+                    <tr ng-if="results.length==0">
+                        <td colspan="3">В этой группе еще нет результатов</td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button" ng-disabled="results.length==0" ng-click="getResultsExcel(previewData.id)" class="btn btn-success"><i
+                        class="glyphicon glyphicon-download"></i> Excel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

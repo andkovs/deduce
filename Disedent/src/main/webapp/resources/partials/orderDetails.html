@@ -1,0 +1,64 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<form novalidate name="orderForm">
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <label>Выберите пользователя</label>
+            <ui-select name="userSelect" ng-model="person.selected" theme="selectize">
+                <ui-select-match required placeholder="Выберите пользователя">{{$select.selected.lastName}} {{$select.selected.firstName}}</ui-select-match>
+                <ui-select-choices repeat="item in users | filter: $select.search">
+                    <div ng-bind-html="item.lastName +' ' + item.firstName | highlight: $select.search"></div>
+                    <small ng-bind-html="item.login | highlight: $select.search"></small>
+                </ui-select-choices>
+            </ui-select>
+            <dl ng-show="orderForm.userSelect.$dirty" class="dl-horizontal">
+                <dt>Имя:</dt>
+                <dd>{{person.selected.firstName}}</dd>
+                <dt>Фамилия:</dt>
+                <dd>{{person.selected.lastName}}</dd>
+                <dt>Логин:</dt>
+                <dd>{{person.selected.login}}</dd>
+                <dt>E-mail:</dt>
+                <dd>{{person.selected.email}}</dd>
+            </dl>
+        </div>
+        <div class="form-group col-xs-4">
+            <label>Выберите курс</label>
+            <ui-select name="courseSelect" ng-model="course.selected" theme="selectize">
+                <ui-select-match required placeholder="Выберите курса">{{$select.selected.title}}</ui-select-match>
+                <ui-select-choices repeat="item in courses | filter: $select.search">
+                    <div ng-bind-html="item.title | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div ng-show="(orderForm.userSelect.$dirty&&orderForm.courseSelect.$dirty&&order.id==0)||(order.id!=0)" class="row">
+        <div class="form-group col-xs-4">
+                <label>Начало курса</label>
+                <div id="beginDate" class="input-group">
+                    <input type="text" class="form-control" ng-model="order.beginDate" />
+                    <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" href=""></span>
+                </span>
+                </div>
+        </div>
+        <div class="form-group col-xs-4">
+                <label>Окончание курса</label>
+                <div id="endDate" class="input-group">
+                    <input type="text" class="form-control" ng-model="order.endDate" />
+                    <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" href=""></span>
+                </span>
+                </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <button ng-show="(orderForm.userSelect.$dirty&&orderForm.courseSelect.$dirty&&order.id==0)||(orderForm.$dirty&&order.id!=0||flag)"
+                    type="button" ng-click="saveOrder(order, orderForm)" class="btn btn-success">Сохранить</button>
+            <a ui-sref="orders" class="btn btn-default">Назад</a>
+            <a href="" ng-click="resetOrder(orderForm)" class="btn btn-default">Сбросить</a>
+        </div>
+    </div>
+</form>

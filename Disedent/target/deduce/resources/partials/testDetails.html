@@ -1,0 +1,125 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<form novalidate name="testForm">
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Название теста</label>
+            <input required ng-maxlength="100" class="form-control" type="text" name="testTitle" ng-model="test.title"/>
+            <span ng-show="testForm.testTitle.$error.maxlength" class="text-warning">Не более 100 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Описание теста</label>
+            <textarea rows="3" required ng-maxlength="20000" class="form-control" type="text" name="testDescription" ng-model="test.description"/>
+            <span ng-show="testForm.testDescription.$error.maxlength" class="text-warning">Не более 20000 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-4 col-sm-3 col-md-2">
+            <label>Количество вопросов</label>
+            <input required class="form-control" type="number" name="testQuestionsAmount" ng-model="test.questionsAmount"/>
+        </div>
+        <div class="form-group col-xs-4 col-sm-3 col-md-2">
+            <label>Время / минуты</label>
+            <input required class="form-control" type="number" name="testTimeLimit" ng-model="test.timeLimit"/>
+        </div>
+        <div class="form-group col-xs-4 col-sm-3 col-md-2">
+            <label>Попытки</label>
+            <input required class="form-control" type="number" name="testAttempts" ng-model="test.attempts"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <button ng-show="(test.id==0&&!testForm.$invalid)||(test.id!=0&&!testForm.$invalid&&testForm.$dirty)" type="button"
+                    ng-click="saveTest(test, testForm)" class="btn btn-success">Сохранить <span class="glyphicon glyphicon-ok"></span></button>
+            <button ng-show="testForm.$dirty" type="button"
+                    ng-click="resetTest(testForm)" class="btn btn-danger">Сбросить <span class="glyphicon glyphicon-remove"></span></button>
+            <a ui-sref="tests" class="btn btn-default">Назад</a>
+        </div>
+    </div>
+</form>
+<hr/>
+<form novalidate name="questionForm" ng-show="test.id!=0">
+    <ins><h4>Список вопросов</h4></ins>
+    <div class="row">
+        <!-- Questions title Search -->
+        <div class="form-group col-xs-5 col-sm-4">
+            <lable>Поиск</lable>
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="search">
+                <span class="input-group-addon glyphicon glyphicon-search"></span>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th style="width: 10%">Номер</th>
+            <th>Наименование</th>
+            <th style="width: 3%"></th>
+            <th style="width: 3%"></th>
+            <th style="width: 3%"></th>
+        </tr>
+        <tr ng-repeat="q in questions | filter: search">
+            <td>
+                <p>{{$index+1}}</p>
+            </td>
+            <td>
+                <p>{{q.title}}</p>
+            </td>
+            <td>
+                <a href="" ng-click="preview(q.id)" class="text-info glyphicon glyphicon-eye-open"></a>
+            </td>
+            <td>
+                <a ui-sref="questionDetails({id: {{q.id}}})" class="glyphicon glyphicon-edit"></a>
+            </td>
+            <td style="text-align:right">
+                <a href="" ng-click="removeQuestion(q, questionForm)" class="text-danger glyphicon glyphicon-trash"></a>
+            </td>
+        </tr>
+        <tr ng-if="questions.length==0">
+            <td colspan="3">Здесь еще нет вопросов</td>
+        </tr>
+    </table>
+</form>
+<form name="newQuestionForm" ng-show="test.id!=0" novalidate>
+    <div class="row">
+        <div class="form-group col-xs-8 col-sm-4">
+            <label>Добавить новый вопрос</label>
+            <input ng-maxlength="2000" class="form-control" type="text" name="newQuestionTitle" ng-model="newQuestion.title" required/>
+            <span ng-show="newQuestionForm.newQuestionTitle.$error.maxlength" class="text-warning">Не более 2000 символов</span>
+        </div>
+        <div class="form-group col-xs-4">
+            <label style="display:block;">&nbsp;</label>
+            <button class="btn btn-success" type="button" ng-click="addQuestion(newQuestion)" ng-disabled="newQuestionForm.$invalid"><i class="glyphicon glyphicon-plus"></i></button>
+        </div>
+    </div>
+</form>
+
+<div id="questionPreview" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">{{previewData.title}}</h2>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <ul ng-repeat="a in previewData.answers">
+                    <li>
+                        <div ng-class="{'alert alert-success': a.isCorrect, 'alert alert-default': !a.isCorrect}"
+                             role="alert">{{a.title}}
+                        </div>
+                        </hr>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

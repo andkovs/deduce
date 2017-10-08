@@ -1,0 +1,47 @@
+
+<h1>{{student.course.title}}</h1>
+
+<div class="row">
+    <!--Aside-->
+    <div class="col-md-3" disable-all="!flag">
+        <!--Course chapters-->
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default" ng-repeat="c in course.chapters">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <span role="button" data-toggle="collapse" data-parent="#accordion" data-target="{{'#c_' + c.id}}" aria-expanded="false" aria-controls="collapseOne">
+                            {{c.title}}
+                        </span>
+                    </h4>
+                </div>
+                <ul class="list-group panel-collapse collapse" id="{{'c_' + c.id}}" role="tabpanel" aria-labelledby="headingOne">
+                    <li class="list-group-item" ng-repeat="t in c.topics">
+                        <a ui-sref="student.topicView({studentId: {{orderId}} ,id: {{t.id}}})">{{t.title}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--Tests-->
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab">
+                <h4 class="panel-title">Тесты</h4>
+            </div>
+            <ul class="list-group" role="tabpanel" ng-repeat="t in tests">
+                <li class="list-group-item">
+                    <a ui-sref="student.testInfo({id: {{t.id}}})">{{t.title}}</a>
+                </li>
+            </ul>
+        </div>
+    </div >
+    <!--Content-->
+    <div class="col-md-9">
+        <div class="well" ui-view="">
+            <div ng-show="$state.includes('student')">
+                <ul ng-repeat="ch in course.chapters">
+                    <b><li>{{ch.title}}</li></b>
+                    <p>{{ch.description}}</p>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<div class="row">
+
+    <!-- LastName Search -->
+    <div class="form-group col-xs-2">
+        <lable>Поиск</lable>
+        <div class="input-group">
+            <input type="text" class="form-control" ng-model="search">
+            <span class="input-group-addon glyphicon glyphicon-search"></span>
+        </div>
+    </div>
+
+    <!-- Course Search -->
+    <div class="form-group col-xs-4">
+        <lable>Поиск по курсу</lable>
+        <select class="form-control" name="courseSelect"
+                ng-options="item.id as item.title for item in courses" ng-model="currentCourse"></select>
+    </div>
+
+</div>
+
+<p class="clearfix">
+    <a class="btn btn-info pull-left" ui-sref="orderDetails({ id: 0})">Новый заказ <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+</p>
+
+<table class="table table-hover">
+    <tr>
+        <th>
+            <a href="" ng-click="sortType = 'id'; sortReverse = !sortReverse">Номер заказа
+            <span ng-show="sortType == 'id'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+            <span ng-show="sortType == 'id'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'userLastName'; sortReverse = !sortReverse">Фамилия
+            <span ng-show="sortType == 'userLastName'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+            <span ng-show="sortType == 'userLastName'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'userLogin'; sortReverse = !sortReverse">Логин
+            <span ng-show="sortType == 'userLogin'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+            <span ng-show="sortType == 'userLogin'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'creationDate'; sortReverse = !sortReverse">Оформление
+                <span ng-show="sortType == 'creationDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'creationDate'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'beginDate'; sortReverse = !sortReverse">Начало
+                <span ng-show="sortType == 'beginDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'beginDate'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'endDate'; sortReverse = !sortReverse">Окончание
+                <span ng-show="sortType == 'endDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'endDate'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th style="width: 3%"></th>
+        <th style="width: 3%"></th>
+        <th style="width: 3%"></th>
+
+    </tr>
+    <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | courseFilter: currentCourse | filter: search">
+        <td ng-bind="o.id"></td>
+        <td ng-bind="o.userLastName"></td>
+        <td ng-bind="o.userLogin"></td>
+        <td ng-bind="o.creationDate"></td>
+        <td ng-bind="o.beginDate"></td>
+        <td ng-bind="o.endDate"></td>
+        <td>
+            <a class="text-info glyphicon glyphicon-eye-open"></a>
+        </td>
+        <td>
+            <a ui-sref="orderDetails({id: {{o.id}}})" class="glyphicon glyphicon-edit"></a>
+        </td>
+        <td><a href="" ng-click="removeOrder(o)" class="text-danger glyphicon glyphicon-remove"></a></td>
+    </tr>
+</table>

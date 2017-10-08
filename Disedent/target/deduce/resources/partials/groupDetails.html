@@ -1,0 +1,204 @@
+<h3>{{group.title}}</h3>
+<hr/>
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title">Добавление нового заказа</h3>
+    </div>
+    <div class="panel-body">
+        <form novalidate name="orderForm">
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-4">
+                    <label>Выберите пользователя</label>
+                    <ui-select name="userSelect" ng-model="person.selected" theme="selectize">
+                        <ui-select-match required placeholder="Выберите пользователя">{{$select.selected.lastName}}
+                            {{$select.selected.firstName}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in users | filter: $select.search">
+                            <div ng-bind-html="item.lastName +' ' + item.firstName | highlight: $select.search"></div>
+                            <small ng-bind-html="item.login | highlight: $select.search"></small>
+                        </ui-select-choices>
+                    </ui-select>
+                    <dl ng-show="orderForm.userSelect.$dirty" class="dl-horizontal">
+                        <dt>Имя:</dt>
+                        <dd>{{person.selected.firstName}}</dd>
+                        <dt>Фамилия:</dt>
+                        <dd>{{person.selected.lastName}}</dd>
+                        <dt>Логин:</dt>
+                        <dd>{{person.selected.login}}</dd>
+                        <dt>E-mail:</dt>
+                        <dd>{{person.selected.email}}</dd>
+                    </dl>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4">
+                    <label>Выберите курс</label>
+                    <ui-select name="courseSelect" ng-model="course.selected" theme="selectize">
+                        <ui-select-match required placeholder="Выберите курса">{{$select.selected.title}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in courses | filter: $select.search">
+                            <div ng-bind-html="item.title | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div ng-show="(orderForm.userSelect.$dirty&&orderForm.courseSelect.$dirty&&order.id==0)||(order.id!=0)"
+                 class="row">
+                <div class="form-group col-xs-6 col-sm-4">
+                    <label>Начало курса</label>
+                    <div id="beginDate" class="input-group">
+                        <input type="text" class="form-control" ng-model="order.beginDate"/>
+                        <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" href=""></span>
+                </span>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4">
+                    <label>Окончание курса</label>
+                    <div id="endDate" class="input-group">
+                        <input type="text" class="form-control" ng-model="order.endDate"/>
+                        <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" href=""></span>
+                </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-12">
+                    <button ng-show="orderForm.userSelect.$dirty&&orderForm.courseSelect.$dirty"
+                            type="button" ng-click="saveOrder(order, orderForm)" class="btn btn-success">Сохранить
+                    </button>
+                    <a ng-show="orderForm.userSelect.$dirty||orderForm.courseSelect.$dirty" href="" ng-click="resetOrder(orderForm)" class="btn btn-danger">Сбросить</a>
+                    <a ui-sref="groups" class="btn btn-default">Назад</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+
+    <!-- LastName Search -->
+    <div class="form-group col-xs-6 col-sm-4 col-md-2">
+        <lable>Поиск</lable>
+        <div class="input-group">
+            <input type="text" class="form-control" ng-model="search">
+            <span class="input-group-addon glyphicon glyphicon-search"></span>
+        </div>
+    </div>
+
+    <!-- Course Search -->
+    <div class="form-group col-xs-6 col-sm-4 col-md-2">
+        <lable>Поиск по курсу</lable>
+        <select class="form-control" name="courseSelect"
+                ng-options="item.id as item.title for item in coursesSearch" ng-model="currentCourse"></select>
+    </div>
+
+</div>
+
+<table class="table table-hover">
+    <tr>
+        <th>
+            <a href="" ng-click="sortType = 'id'; sortReverse = !sortReverse">Заказ №
+                <span ng-show="sortType == 'id'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'id'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'userLastName'; sortReverse = !sortReverse">Фамилия
+                <span ng-show="sortType == 'userLastName'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'userLastName'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'userLogin'; sortReverse = !sortReverse">Логин
+                <span ng-show="sortType == 'userLogin'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'userLogin'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'creationDate'; sortReverse = !sortReverse">Оформление
+                <span ng-show="sortType == 'creationDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'creationDate'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'beginDate'; sortReverse = !sortReverse">Начало
+                <span ng-show="sortType == 'beginDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'beginDate'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th>
+            <a href="" ng-click="sortType = 'endDate'; sortReverse = !sortReverse">Окончание
+                <span ng-show="sortType == 'endDate'&& !sortReverse" class="glyphicon glyphicon-triangle-bottom" style="font-size: .75em;"></span>
+                <span ng-show="sortType == 'endDate'&& sortReverse" class="glyphicon glyphicon-triangle-top" style="font-size: .75em;"></span>
+            </a>
+        </th>
+        <th style="width: 3%"></th>
+        <th style="width: 3%"></th>
+
+    </tr>
+    <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | courseFilter: currentCourse | filter: search" data-toggle="tooltip" title="{{o.courseTitle}}">
+        <td ng-bind="o.id"></td>
+        <td ng-bind="o.userLastName"></td>
+        <td ng-bind="o.userLogin"></td>
+        <td ng-bind="o.creationDate"></td>
+        <td ng-bind="o.beginDate"></td>
+        <td ng-bind="o.endDate"></td>
+
+        <td>
+            <a href="" ng-click="getResults(o)" class="text-info glyphicon glyphicon-eye-open"></a>
+        </td>
+        <td><a href="" ng-click="removeOrder(o)" class="text-danger glyphicon glyphicon-remove"></a></td>
+    </tr>
+    <tr ng-if="orders.length==0">
+        <td colspan="3">Здесь еще нет заказов</td>
+    </tr>
+</table>
+
+<div id="orderResults" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">{{previewData.lastName}} {{previewData.firstName}} {{previewData.middleName}} ({{previewData.login}})</h2>
+                <hr/>
+                <h3 class="modal-title">Курс: {{previewData.courseTitle}}</h3>
+                <p>Начало: <b>{{previewData.beginDate}}</b>  Окончание: <b>{{previewData.endDate}}</b> </p>
+            </div>
+
+            <!-- Body -->
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <lable><b>Поиск</b></lable>
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="previewSearch">
+                            <span class="input-group-addon glyphicon glyphicon-search"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-hover">
+                    <tr ng-repeat="r in results | filter: previewSearch">
+                        <td>{{r.testTitle}}</td>
+                        <td>{{r.finishTime}}</td>
+                        <td>{{r.amountCorrectAnswers}}/{{r.amountQuestions}}</td>
+                        <td><a href="" ng-click="getResultExcel(r.id)" class="text-success glyphicon glyphicon-print"></a>
+                        </td>
+                    </tr>
+                    <tr ng-if="results.length==0">
+                        <td colspan="3">В этом заказе еще нет результатов</td>
+                    </tr>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

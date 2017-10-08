@@ -1,0 +1,104 @@
+<h3 ng-bind="title"></h3>
+<hr/>
+
+<div class="row">
+
+
+    <div class="form-group col-xs-4">
+        <a class="btn btn-info" ui-sref="userDetails({ id: 0})">Новый пользователь <span
+                class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    </div>
+    <!-- Course title Search -->
+    <div class="form-group col-xs-4 col-sm-4 col-md-2 pull-right">
+        <div class="input-group">
+            <input type="text" class="form-control" ng-model="search">
+            <span class="input-group-addon glyphicon glyphicon-search"></span>
+        </div>
+    </div>
+</div>
+
+
+<table class="table table-hover table-striped">
+    <tr>
+        <td style="width: 3%"></td>
+        <th>Логин</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>E-mail</th>
+        <!--<td style="width: 3%"></td>-->
+        <td style="width: 3%"></td>
+        <td style="width: 3%"></td>
+    </tr>
+    <tr ng-repeat="u in users | filter: search">
+        <td>
+            <button ng-show="u.enabled" ng-click="disableUser(u)" type="button" class="btn-xs btn-success">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </button>
+            <button ng-show="!u.enabled" ng-click="enableUser(u)" type="button" class="btn-xs btn-danger">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </button>
+        </td>
+        <td>
+            <p>{{u.login}}</p>
+        </td>
+        <td>
+            <p>{{u.firstName}}</p>
+        </td>
+        <td>
+            <p>{{u.lastName}}</p>
+        </td>
+        <td>
+            <p>{{u.email}}</p>
+        </td>
+        <!--<td>-->
+        <!--<a href="" ng-click="preview(u.id)" class="text-info glyphicon glyphicon-eye-open"></a>-->
+        <!--</td>-->
+        <td>
+            <a ui-sref="userDetails({id: {{u.id}}})" class="glyphicon glyphicon-edit"></a>
+        </td>
+        <td>
+            <a href="" ng-click="removeUser(u)" class="text-danger glyphicon glyphicon-trash"></a>
+        </td>
+    </tr>
+    <tr ng-if="users.length==0">
+        <td colspan="3">Здесь еще нет пользователей</td>
+    </tr>
+</table>
+
+<!--<div id="userPreview" class="modal fade" tabindex="-1" role="dialog">-->
+<!--<div class="modal-dialog modal-lg" role="document">-->
+<!--<div class="modal-content">-->
+
+<!--&lt;!&ndash; Header &ndash;&gt;-->
+<!--<div class="modal-header">-->
+<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+<!--<h2 class="modal-title">{{previewData.login}}</h2>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Body &ndash;&gt;-->
+<!--<div class="modal-body">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-2 text-right"><p><b>Логин</b></p></div>-->
+<!--<div class="col-xs-4"><p>{{previewData.login}}</p></div>-->
+<!--<div class="col-xs-2 text-right"><p><b>Имя</b></p></div>-->
+<!--<div class="col-xs-4"><p>{{previewData.firstName}}</p></div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="col-xs-2 text-right"><p><b>Пароль</b></p></div>-->
+<!--<div class="col-xs-4"><p>{{previewData.password}}</p></div>-->
+<!--<div class="col-xs-2 text-right"><p><b>Фамилия</b></p></div>-->
+<!--<div class="col-xs-4"><p>{{previewData.lastName}}</p></div>-->
+<!--</div>-->
+<!--<hr/>-->
+<!--<div class="row">-->
+<!--<div class="col-xs-2 text-right"><p><b>Телефон</b></p></div>-->
+<!--<div class="col-xs-4"><p>{{previewData.phone}}</p></div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="col-xs-2 text-right"><p><b>E-mail</b></p></div>-->
+<!--<div class="col-xs-4"><p>{{previewData.email}}</p></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->

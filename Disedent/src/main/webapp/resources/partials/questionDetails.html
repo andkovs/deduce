@@ -1,0 +1,60 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<div class="row">
+    <div class="alert alert-info col-xs-12 col-sm-4" role="alert" ng-show="questionForm.$dirty||answerForm.$dirty||flag">
+        <p>Были внесены изменения</p>
+        <hr/>
+        <a href="" ng-click="saveQuestion(question, questionForm)" class="btn btn-success">Сохранить</a>
+        <a href="" ng-click="resetQuestion(questionForm)" class="btn btn-danger">Сбросить</a>
+    </div>
+</div>
+
+<form novalidate name="questionForm">
+    <div class="row">
+        <div class="form-group col-xs-6">
+            <label>Название вопроса</label>
+            <textarea required ng-maxlength="2000" class="form-control" rows="3" name="questionTitle" ng-model="question.title"></textarea>
+            <span ng-show="questionForm.questionTitle.$error.maxlength" class="text-warning">Не более 2000 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-4">
+            <a ui-sref="testDetails({ id: {{question.testId}}})" class="btn btn-default">Назад</a>
+        </div>
+    </div>
+<hr/>
+<ins><h4>Список ответов</h4></ins>
+<span ng-form="answerForm" novalidate ng-repeat="a in question.answers">
+    <div class="row">
+        <div class="form-group col-xs-6">
+            <textarea required ng-maxlength="2000" class="form-control" type="text" rows="2" name="answerTitle" ng-model="a.title"/>
+            <span ng-show="answerForm.answerTitle.$error.maxlength" class="text-warning">Не более 2000 символов</span>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="radio" name="isCorrect" ng-click="setCorrectAnswer(a)" ng-checked="a.isCorrect">
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-6">
+            <button class="btn btn-danger" type="button"
+                    ng-click="removeAnswer(a)">Удалить ответ <span class="glyphicon glyphicon-trash"></span></button>
+        </div>
+    </div>
+</span>
+</form>
+<form name="newAnswerForm" novalidate>
+    <div class="row">
+        <div class="form-group col-xs-6">
+            <label>Добавить новый овет</label>
+            <textarea required ng-maxlength="2000" class="form-control" type="text" rows="2" name="newAnswerTitle" ng-model="newAnswer.title"/>
+            <span ng-show="newAnswerForm.newAnswerTitle.$error.maxlength" class="text-warning">Не более 2000 символов</span>
+        </div>
+        <div class="form-group col-xs-4">
+            <label style="display:block;">&nbsp;</label>
+            <button class="btn btn-success" type="button" ng-click="addAnswer(newAnswer)" ng-disabled="newAnswerForm.$invalid"><i class="glyphicon glyphicon-plus"></i></button>
+        </div>
+    </div>
+</form>

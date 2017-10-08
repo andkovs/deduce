@@ -1,0 +1,46 @@
+<h3 ng-bind="title"></h3>
+<hr />
+
+<form novalidate name="topicForm">
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Название раздела</label>
+            <input required ng-maxlength="200" class="form-control" type="text" name="topicTitle" ng-model="topic.title"/>
+            <span ng-show="topicForm.topicTitle.$error.maxlength" class="text-warning">Не более 200 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-8">
+            <label>Текст раздела</label>
+            <textarea rows="3" required ng-maxlength="20000" class="form-control" type="text" name="topicText" ng-model="topic.description"/>
+            <span ng-show="topicForm.topicText.$error.maxlength" class="text-warning">Не более 20000 символов</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="alert alert-danger col-xs-8 form-group" role="alert" ng-show="!topic.file">
+            <p>Файл не загружен</p>
+            <p>
+                <input type="file" name="fileUpl" id="fileUpl" name="file" file-model="myFile" required />
+            </p>
+            <p>
+                <button class="btn btn-success" ng-click = "uploadFile()"
+                        ng-disabled="!myFile">Загрузить <span class="glyphicon glyphicon-download"></span></button>
+            </p>
+        </div>
+        <div class="alert alert-info col-xs-8" role="alert" ng-show="topic.file">
+            <p>Файл загружен</p>
+            <p>
+                <button class="btn btn-danger" ng-click = "removeFile(topic.id)">Удалить файл</button>
+            </p>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <button ng-show="!topicForm.$invalid&&topicForm.$dirty" type="button"
+                ng-click="saveTopic(topic, topicForm)" class="btn btn-success">Сохранить <span class="glyphicon glyphicon-ok"></span></button>
+        <button ng-show="topicForm.$dirty" type="button"
+                ng-click="resetTopic(topicForm)" class="btn btn-danger">Сбросить <span class="glyphicon glyphicon-remove"></span></button>
+        <a ui-sref="chapterDetails({ id: {{topic.chapterId}}})" class="btn btn-default">Назад</a>
+    </div>
+</form>
+

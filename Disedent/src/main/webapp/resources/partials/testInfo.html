@@ -1,0 +1,39 @@
+<div ng-show="flag">
+    <h2>{{test.title}}</h2>
+    <p>{{test.description}}</p>
+    <b>Время на тест: </b>
+    <p>{{test.timeLimit}} минут</p>
+    <b>Количество вопросов: </b>
+    <p>{{test.questionsAmount}}</p>
+    <b>Осталось попыток: </b>
+    <p ng-show="test.attempts>0">{{test.attempts}}</p>
+    <p ng-show="test.attempts<=0">У вас больше нет попыток</p>
+
+    <a class="btn btn-success" type="button" ng-show="test.attempts>0"
+       ng-click="startTest()">Начать тестирование
+        <span class="glyphicon glyphicon-play-circle"></span>
+    </a>
+
+</div>
+
+<div ng-show="!flag">
+    <h2 class="row">
+        <span id="testTitle" class="col-sm-9">{{test.title}}</span>
+        <span id="testTime" class="col-sm-3 text-right"></span>
+    </h2>
+
+    <h2>{{questions[currentQuestion-1].title}}</h2>
+    <hr/>
+
+    <div class="radio" ng-repeat="a in questions[currentQuestion-1].answers">
+        <label>
+            <input type="radio" name="isCorrect" ng-click="setCorrectAnswer(currentQuestion-1, a)" ng-checked="a.isCorrect">
+            {{a.title}}
+        </label>
+    </div>
+
+    <pagination total-items="totalItems" ng-model="currentQuestion" max-size="maxSize"
+                class="pagination-sm" boundary-links="true" items-per-page="1"></pagination>
+    <pre><button type="button" ng-click="finishTest(test)" class="btn btn-danger pull-right">Завершить тест <span
+            class="glyphicon glyphicon-exclamation-sign"></span></button></pre>
+</div>

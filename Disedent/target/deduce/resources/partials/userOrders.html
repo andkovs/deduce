@@ -1,0 +1,16 @@
+<h3>Список моих курсов</h3>
+<hr/>
+
+<table class="table table-hover table-striped">
+    <tr>
+        <th>Наименование курса</th>
+    </tr>
+    <tr ng-repeat="o in orders">
+        <td>
+            <a ui-sref="student({studentId: {{o.id}}})">{{o.courseTitle}}</a>
+        </td>
+    </tr>
+    <tr ng-if="orders.length==0">
+        <td colspan="3">На данный момент у вас нет активных курсов</td>
+    </tr>
+</table>

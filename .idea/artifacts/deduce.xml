@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="deduce">
+    <output-path>$PROJECT_DIR$/out/artifacts/deduce</output-path>
+    <root id="root" />
+  </artifact>
+</component>

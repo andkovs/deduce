@@ -1,0 +1,26 @@
+<h3>Список моих результатов</h3>
+<hr/>
+
+<div ng-show="userResults.length==0">
+    <p>Вы не прошли ни одного теста</p>
+</div>
+
+<div class="panel panel-info" ng-repeat="u in userResults">
+
+    <div class="panel-heading">
+        <h3>{{u.order.courseTitle}}</h3>
+        <p>Начало: <b>{{u.order.beginDate}}</b> Окончание: <b>{{u.order.endDate}}</b></p>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <tr ng-repeat="r in u.results">
+                <td>{{r.testTitle}}</td>
+                <td>{{r.finishTime}}</td>
+                <td>{{r.amountCorrectAnswers}}/{{r.amountQuestions}}</td>
+            </tr>
+            <tr ng-if="u.results.length==0">
+                <td colspan="3">Вы не прошли ни одного теста</td>
+            </tr>
+        </table>
+    </div>
+</div>

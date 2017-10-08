@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <title>deduce</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta http-equiv="Cache-Control" content="no-store,no-cache,must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="-1">
+
+  <link rel="stylesheet" type="text/css" href="./resources/content/libs/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="./resources/content/css/select.css">
+  <link rel="stylesheet" type="text/css" href="./resources/content/css/selectize.default.css">
+  <link rel="stylesheet" type="text/css" href="./resources/content/css/style.css">
+  <link rel="stylesheet" type="text/css" href="./resources/content/libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" type="text/css" href="./resources/content/libs/angular-loading-bar/build/loading-bar.min.css">
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+  <!--<link rel="stylesheet" type="text/css" href="./resources/content/libs/pdf.js-viewer/viewer.css">-->
+
+  <style>
+    body {
+      padding: 15px;
+    }
+    .select2 > .select2-choice.ui-select-match {
+      /* Because of the inclusion of Bootstrap */
+      height: 29px;
+    }
+    .selectize-control > .selectize-dropdown {
+      top: 36px;
+    }
+  </style>
+  <style>
+    *{box-sizing: border-box;}
+    .wrapper {margin: 0 auto; width: 100%; }
+    .pdf-controls { width: 100%; display: block; padding: 1em;}
+    .rotate0 {-webkit-transform: rotate(0deg); transform: rotate(0deg); }
+    .rotate90 {-webkit-transform: rotate(90deg); transform: rotate(90deg); }
+    .rotate180 {-webkit-transform: rotate(180deg); transform: rotate(180deg); }
+    .rotate270 {-webkit-transform: rotate(270deg); transform: rotate(270deg); }
+    .fixed { position: fixed; top: 0; left: calc(50% - 480px); z-index: 100; width: 100%; padding: 1em; background: rgba(238, 238, 238,.9); width: 960px; }
+    .wrapper .ui-icon {
+      color: #B0B0B0;
+      background-color: #F7F7F7;
+      border-color: #DDD;
+      -moz-transform: scale(.9);
+      -webkit-transform: scale(.9);
+      -o-transform: scale(.9);
+      -ms-transform: scale(.9);
+      transform: scale(.9);
+    }
+    .wrapper .ui-icon {
+      display: inline-block;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      line-height: 22px;
+      text-align: center;
+      position: static;
+      float: none;
+      margin: 0 2px!important;
+      color: grey;
+      border: 1px solid #CCC;
+      background-color: #FFF;
+      border-radius: 100%;
+      vertical-align: middle;
+    }
+    #nav{
+      background-color:#EFF3F8!important;
+    }
+    .padd{
+      padding-bottom:10px;
+    }
+  </style>
+
+
+</head>
+<body ng-controller="RootController">
+<nav class="navbar navbar-default">
+  <div class="container ng-cloak">
+    <div class="navbar-header">
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
+        <span class="icon-bar"></span><span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" ui-sref="home" ng-if="user">deduce</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="nav navbar-nav">
+        <li><a ui-sref="courses" ng-if="user" ng-show="roles.indexOf('admin')!=-1">Курсы</a></li>
+        <li><a ui-sref="tests" ng-if="user" ng-show="roles.indexOf('admin')!=-1">Тесты</a></li>
+        <li><a ui-sref="users" ng-if="user"  ng-show="roles.indexOf('admin')!=-1">Пользователи</a></li>
+        <li><a ui-sref="groups" ng-if="user" ng-show="roles.indexOf('admin')!=-1">Группы</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <!--<li><a>{{name}}</a></li>-->
+        <li><a href="" ng-if="user" ng-click="logout()">Выход</a></li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+<div class="container" ui-view=""></div>
+<footer>
+  <div class="container">
+    <hr>
+    <p class="text-center">deduce &copy; 2017 </p>
+  </div>
+</footer>
+<!-- Common scripts -->
+<script src="./resources/content/libs/jquery/dist/jquery.min.js"></script>
+<script src="./resources/content/libs/underscore/underscore-min.js"></script>
+<script src="./resources/content/libs/moment/moment.js"></script>
+<script src="./resources/content/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="./resources/content/libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="./resources/content/libs/FileSaver.js"></script>
+<script src="./resources/content/libs/pdfjs/pdf.js"></script>
+<!-- Angular -->
+<script src="./resources/content/libs/angular/angular.min.js"></script>
+<script src="./resources/content/libs/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="./resources/content/libs/angular-loading-bar/build/loading-bar.min.js"></script>
+<script src="./resources/content/libs/checklist-model.js"></script>
+<script src="./resources/content/libs/select.js"></script>
+<script src="./resources/content/libs/angular-sanitize.js"></script>
+<script src="./resources/content/libs/angular-file-model.js"></script>
+<script src="./resources/content/libs/ui-bootstrap-tpls-0.11.0.js"></script>
+<script src="./resources/content/libs/disable-all.js"></script>
+<script src="./resources/content/libs/angular-pdf.js"></script>
+<!--<script src="./resources/content/libs/angular-pdfjs-viewer.js"></script>-->
+<!-- App -->
+<script src="./resources/content/js/app.js"></script>
+<!-- Controllers -->
+<script src="./resources/content/js/controllers/rootController.js"></script>
+<script src="./resources/content/js/controllers/homeController.js"></script>
+<script src="./resources/content/js/controllers/testController.js"></script>
+<script src="./resources/content/js/controllers/courseController.js"></script>
+<script src="./resources/content/js/controllers/courseDetailsController.js"></script>
+<script src="./resources/content/js/controllers/chapterDetailsController.js"></script>
+<script src="./resources/content/js/controllers/topicDetailsController.js"></script>
+<script src="./resources/content/js/controllers/testController.js"></script>
+<script src="./resources/content/js/controllers/testDetailsController.js"></script>
+<script src="./resources/content/js/controllers/questionDetailsController.js"></script>
+<script src="./resources/content/js/controllers/userController.js"></script>
+<script src="./resources/content/js/controllers/userDetailsController.js"></script>
+<script src="./resources/content/js/controllers/orderController.js"></script>
+<script src="./resources/content/js/controllers/orderDetailsController.js"></script>
+<script src="./resources/content/js/controllers/studentController.js"></script>
+<script src="./resources/content/js/controllers/topicViewController.js"></script>
+<script src="./resources/content/js/controllers/testInfoController.js"></script>
+<script src="./resources/content/js/controllers/testViewController.js"></script>
+<script src="./resources/content/js/controllers/userOrdersController.js"></script>
+<script src="./resources/content/js/controllers/groupController.js"></script>
+<script src="./resources/content/js/controllers/groupDetailsController.js"></script>
+<script src="./resources/content/js/controllers/userTestResultController.js"></script>
+<script src="./resources/content/js/controllers/userResultsController.js"></script>
+<!--Services -->
+<script src="./resources/content/js/services/courseService.js"></script>
+<script src="./resources/content/js/services/chapterService.js"></script>
+<script src="./resources/content/js/services/topicService.js"></script>
+<script src="./resources/content/js/services/testService.js"></script>
+<script src="./resources/content/js/services/questionService.js"></script>
+<script src="./resources/content/js/services/answerService.js"></script>
+<script src="./resources/content/js/services/userService.js"></script>
+<script src="./resources/content/js/services/roleService.js"></script>
+<script src="./resources/content/js/services/orderService.js"></script>
+<script src="./resources/content/js/services/fileUploadService.js"></script>
+<script src="./resources/content/js/services/courseToTestService.js"></script>
+<script src="./resources/content/js/services/studentService.js"></script>
+<script src="./resources/content/js/services/sessionService.js"></script>
+<script src="./resources/content/js/services/groupService.js"></script>
+<script src="./resources/content/js/services/resultService.js"></script>
+<!--Filters -->
+<script src="./resources/content/js/filters/courseFilter.js"></script>
+<script src="./resources/content/js/filters/propsFilter.js"></script>
+<script src="./resources/content/js/filters/getByIdFilter.js"></script>
+<!--Factories -->
+<script src="./resources/content/js/factories/fileFactory.js"></script>
+<script src="./resources/content/js/factories/rootFactory.js"></script>
+
+</body>
+</html>
